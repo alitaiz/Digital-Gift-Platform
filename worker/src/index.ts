@@ -1,3 +1,4 @@
+
 // To address TypeScript errors when @cloudflare/workers-types is not available,
 // we'll provide minimal type definitions for the Cloudflare environment.
 // In a real-world project, you should `npm install -D @cloudflare/workers-types`
@@ -65,6 +66,16 @@ const getR2Client = (env: Env) => {
 
 export default {
   async fetch(request: Request, env: Env, ctx: ExecutionContext): Promise<Response> {
+    // --- Environment Sanity Check ---
+    // This check prevents silent crashes if the worker is not configured correctly.
+    if (!env.GIFTS_KV || !env.GIFTS_BUCKET || !env.R2_BUCKET_NAME || !env.R2_PUBLIC_URL || !env.R2_ACCOUNT_ID || !env.R2_ACCESS_KEY_ID || !env.R2_SECRET_ACCESS_KEY) {
+      console.error("CRITICAL: Worker environment is not configured correctly. Bindings or secrets are missing. Check your wrangler.toml and Cloudflare dashboard settings.");
+      return new Response(JSON.stringify({ error: "Server configuration error. The service is temporarily unavailable." }), {
+        status: 503, // Service Unavailable
+        headers: { ...corsHeaders, "Content-Type": "application/json" }
+      });
+    }
+    
     if (request.method === "OPTIONS") {
       // Respond to CORS preflight requests.
       return new Response(null, { status: 204, headers: corsHeaders });
