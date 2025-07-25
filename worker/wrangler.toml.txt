@@ -1,0 +1,46 @@
+# This is the configuration for your Cloudflare Worker.
+# For more information, see https://developers.cloudflare.com/workers/wrangler/configuration/
+
+name = "digital-gifts-api"
+main = "src/index.ts"
+compatibility_date = "2023-12-01"
+
+# ---------------------------------------------------------------------------
+# SECTION 1: KEY-VALUE (KV) STORAGE BINDING
+# This links your code to the Cloudflare KV database where gift TEXT data is stored.
+#
+# To get your ID:
+# 1. Go to your Cloudflare Dashboard -> "Workers & Pages" -> "KV".
+# 2. Create a namespace (e.g., "digital-gifts-kv").
+# 3. Copy the "ID" of the namespace you just created.
+# 4. Paste the ID below, replacing the placeholder text.
+# ---------------------------------------------------------------------------
+[[kv_namespaces]]
+binding = "GIFTS_KV"
+id = "a1e4c1068d5840329877e94da9ce87d5"
+
+
+# ---------------------------------------------------------------------------
+# SECTION 2: R2 BUCKET (IMAGE STORAGE) BINDING
+# This section links your code to the R2 bucket where IMAGE files are stored.
+#
+# To get your bucket name:
+# 1. Go to your Cloudflare Dashboard -> "R2".
+# 2. Create a bucket (e.g., "digital-gifts-assets").
+# 3. Copy the EXACT name of the bucket you created.
+# 4. Paste the bucket name below, replacing the placeholder text.
+# ---------------------------------------------------------------------------
+[[r2_buckets]]
+binding = "GIFTS_BUCKET"
+bucket_name = "digital-gifts-assets"
+
+# ---------------------------------------------------------------------------
+# SECTION 3: WORKER ENVIRONMENT VARIABLES (CRITICAL)
+# This section provides your code with necessary configuration values.
+#
+# The bucket_name here MUST EXACTLY MATCH the bucket_name in SECTION 2.
+# This variable is required by the backend code to create upload URLs and to delete images.
+# Without this, uploads and deletions will fail.
+# ---------------------------------------------------------------------------
+[vars]
+R2_BUCKET_NAME = "digital-gifts-assets"
