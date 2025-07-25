@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGiftsContext } from '../App';
@@ -153,6 +154,13 @@ const CreatePage = () => {
         }
     }
   };
+  
+  const buttonText = isLoading
+    ? (isEditMode ? 'Updating Gift...' : 'Creating Gift...')
+    : isUploadingImages
+    ? 'Optimizing & Uploading...'
+    : (isEditMode ? 'Update Gift' : 'Create Gift Page');
+
 
   return (
     <div className="min-h-screen bg-brand-cream/70 pt-24 pb-12">
@@ -162,7 +170,7 @@ const CreatePage = () => {
           <h1 className="text-3xl font-bold font-serif text-center text-brand-navy">{isEditMode ? 'Edit Your Gift' : 'Create a Digital Gift'}</h1>
           <p className="text-center text-slate-600 mt-2">{isEditMode ? 'Update the details for this gift page.' : 'Fill in the details to create a beautiful gift page.'}</p>
 
-          {isLoading ? (
+          {isLoading && !showToast ? (
             <div className="py-20 flex justify-center">
               <LoadingSpinner />
             </div>
@@ -201,7 +209,7 @@ const CreatePage = () => {
                   rows={6} 
                   className="mt-1 block w-full px-4 py-2 border border-slate-300 rounded-md shadow-sm focus:ring-brand-gold focus:border-brand-gold" 
                   placeholder="Share a favorite memory, a heartfelt wish, or an inside joke..."></textarea>
-                {rewriteError && <p className="text-red-500 text-xs mt-1">{rewriteError}</p>}
+                {rewriteError && <p role="alert" className="text-red-500 text-xs mt-1">{rewriteError}</p>}
               </div>
 
               {isEditMode && existingImages.length > 0 && (
@@ -244,10 +252,10 @@ const CreatePage = () => {
                 <p><strong>Important:</strong> This gift page can only be permanently deleted or edited from <strong>this device</strong>. Please keep the gift code safe to share with the recipient.</p>
               </div>
               
-              {error && <p className="text-red-500 text-center">{error}</p>}
+              {error && <p role="alert" className="text-red-500 text-center">{error}</p>}
               
-              <button type="submit" className="w-full bg-brand-gold text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-colors duration-300 disabled:bg-slate-400">
-                {isUploadingImages ? 'Optimizing & Uploading...' : (isEditMode ? 'Update Gift' : 'Create Gift Page')}
+              <button type="submit" disabled={isLoading || isUploadingImages} className="w-full bg-brand-gold text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-colors duration-300 disabled:bg-slate-400 disabled:cursor-not-allowed">
+                {buttonText}
               </button>
             </form>
           )}
