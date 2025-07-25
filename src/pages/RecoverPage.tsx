@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useGiftsContext } from '../App';
@@ -58,7 +59,7 @@ const RecoverPage = () => {
               aria-label="Gift Code"
               disabled={isLoading}
             />
-            {error && <p className="text-red-500 text-sm mt-2">{error}</p>}
+            {error && <p role="alert" className="text-red-500 text-sm mt-2">{error}</p>}
             <button type="submit" className="w-full mt-4 bg-brand-navy text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-80 transition-colors duration-300 disabled:bg-slate-400">
               {isLoading ? 'Searching...' : 'Find Gift Page'}
             </button>
