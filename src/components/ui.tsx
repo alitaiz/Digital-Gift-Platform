@@ -39,7 +39,7 @@ export const Toast = ({ message, show, onDismiss }: { message: string, show: boo
 
 interface GiftCardProps {
   gift: GiftSummary;
-  onDelete: (slug: string) => void;
+  onDelete: (slug: string) => void | Promise<void>;
   isOwner: boolean;
 }
 
