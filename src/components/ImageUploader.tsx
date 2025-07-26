@@ -17,7 +17,7 @@ interface ImageUploaderProps {
 }
 
 const resizeImage = (file: File): Promise<File> => {
-  return new Promise((resolve, reject) => {
+  return new Promise<File>((resolve, reject) => {
     const MAX_DIMENSION = 1920;
     const reader = new FileReader();
     reader.readAsDataURL(file);
@@ -53,7 +53,7 @@ const resizeImage = (file: File): Promise<File> => {
         ctx.drawImage(img, 0, 0, width, height);
 
         canvas.toBlob(
-          (blob) => {
+          (blob: Blob | null) => {
             if (!blob) {
               return reject(new Error('Canvas toBlob failed'));
             }
@@ -168,7 +168,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, on
         ? (crypto as Crypto).randomUUID()
         : Math.random().toString(36).substring(2, 10);
 
-    const fileProcessingPromises = files.map(file => {
+    const fileProcessingPromises = files.map((file: File) => {
       const id = generateId();
       // Immediately add a placeholder to show the user something is happening
       setUploadableFiles(prev => [
@@ -177,7 +177,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({ onImagesChange, on
       ]);
 
       return resizeImage(file)
-        .then(resizedFile => ({
+        .then((resizedFile: File) => ({
             id,
             file: resizedFile,
             preview: URL.createObjectURL(resizedFile), // This will be revoked later
