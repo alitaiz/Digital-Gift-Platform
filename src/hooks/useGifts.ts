@@ -110,7 +110,8 @@ export const useGifts = () => {
       }
     } catch (error) {
       console.error("API call to addGift failed:", error);
-      return { success: false, error: "Network error. Please check your connection and try again." };
+      const message = error instanceof Error ? error.message : "An unknown network error occurred.";
+      return { success: false, error: `Network Error: ${message}. Please check your connection and the browser console for details.` };
     } finally {
       setLoading(false);
     }
@@ -180,7 +181,8 @@ export const useGifts = () => {
       return { success: false, error: errorData.error || `Failed to delete. Server responded with ${response.status}` };
     } catch (error) {
       console.error("API call to deleteGift failed:", error);
-      return { success: false, error: "Network error during deletion. Please check your connection." };
+      const message = error instanceof Error ? error.message : "An unknown network error occurred.";
+      return { success: false, error: `Network Error: ${message}. Please check your connection and the browser console for details.` };
     } finally {
       setLoading(false);
     }
@@ -205,7 +207,8 @@ export const useGifts = () => {
         return { success: false, error: errorData.error || `Failed to update. Server responded with ${response.status}` };
     } catch (error) {
         console.error("API call to updateGift failed:", error);
-        return { success: false, error: "Network error during update. Please check your connection." };
+        const message = error instanceof Error ? error.message : "An unknown network error occurred.";
+        return { success: false, error: `Network Error: ${message}. Please check your connection and the browser console for details.` };
     } finally {
       setLoading(false);
     }
