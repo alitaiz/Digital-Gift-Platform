@@ -5,6 +5,23 @@ import { API_BASE_URL } from '../config';
 const LOCAL_CREATED_GIFTS_KEY = 'digital_gift_created_gifts';
 const LOCAL_VISITED_SLUGS_KEY = 'digital_gift_visited_slugs';
 
+/**
+ * Generates a v4 UUID. Provides a fallback for environments without `crypto.randomUUID`.
+ * @returns {string} A new UUID.
+ */
+const generateUUID = () => {
+  if (typeof crypto !== 'undefined' && crypto.randomUUID) {
+    return crypto.randomUUID();
+  }
+  // A simple fallback for environments without crypto.randomUUID
+  // See: https://stackoverflow.com/a/2117523
+  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+    const r = Math.random() * 16 | 0;
+    const v = c === 'x' ? r : (r & 0x3 | 0x8);
+    return v.toString(16);
+  });
+};
+
 // This hook now manages interactions with the remote API and local storage for ownership/access
 export const useGifts = () => {
   const [loading, setLoading] = useState<boolean>(false);
@@ -83,7 +100,7 @@ export const useGifts = () => {
       const { recipientName, greeting, message, images, slug } = giftData;
       // Generate slug and editKey here
       const finalSlug = slug?.trim().toLowerCase().replace(/[^a-z0-9-]/g, '') || generateSlug(recipientName);
-      const editKey = crypto.randomUUID();
+      const editKey = generateUUID();
 
       const newGift: Gift = {
         recipientName,
