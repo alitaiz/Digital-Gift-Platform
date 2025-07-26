@@ -1,4 +1,5 @@
 
+
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useGiftsContext } from '../App';
@@ -252,7 +253,25 @@ const CreatePage = () => {
                 <p><strong>Important:</strong> This gift page can only be permanently deleted or edited from <strong>this device</strong>. Please keep the gift code safe to share with the recipient.</p>
               </div>
               
-              {error && <p role="alert" className="text-red-500 text-center">{error}</p>}
+              {error && (
+                <div role="alert" className="p-4 bg-red-50 border border-red-300 rounded-lg">
+                  <div className="flex">
+                    <div className="flex-shrink-0">
+                      <svg className="h-5 w-5 text-red-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
+                        <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
+                      </svg>
+                    </div>
+                    <div className="ml-3">
+                      <h3 className="text-sm font-medium text-red-800">
+                        {isEditMode ? 'Error Updating Gift' : 'Error Creating Gift'}
+                      </h3>
+                      <div className="mt-2 text-sm text-red-700">
+                        <p>{error}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              )}
               
               <button type="submit" disabled={isLoading || isUploadingImages} className="w-full bg-brand-gold text-white font-bold py-3 px-4 rounded-lg hover:bg-opacity-90 transition-colors duration-300 disabled:bg-slate-400 disabled:cursor-not-allowed">
                 {buttonText}
